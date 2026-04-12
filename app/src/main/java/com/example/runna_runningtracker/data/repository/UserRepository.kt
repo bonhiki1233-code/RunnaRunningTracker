@@ -2,6 +2,7 @@ package com.example.runna_runningtracker.data.repository
 
 import com.example.runna_runningtracker.data.model.User
 import com.google.firebase.firestore.FirebaseFirestore
+
 import com.google.firebase.firestore.SetOptions
 
 class UserRepository(

@@ -1,304 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/runna_surface">
+    android:background="#FDFDFF"
+    android:scrollbars="none"
+    tools:context=".HomeActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
+            <TextView
+                android:id="@+id/tvWelcomeHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome back,"
+                android:textColor="#333333"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/tvReady"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Ready for your next run?"
+                android:textColor="#777777"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvWelcomeHome" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btnStartRunning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="#FF7243"
+            android:text="→ Start Running"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="24dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="#FF7243"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+                <View
+                    android:id="@+id/viewIcon"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@android:color/white"
+                    android:layout_centerVertical="true"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/viewIcon"
+                    android:layout_marginStart="16dp"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Challenges"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Join and compete with runners"
+                        android:textColor="#EEEEEE"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="›"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginBottom="16dp"
+            android:text="This Week"
+            android:textColor="#333333"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="24dp"
+            android:columnCount="2">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Distance" android:textColor="#666666" android:textSize="12sp" />
+                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_alignParentEnd="true" android:src="@android:drawable/ic_menu_sort_by_size" app:tint="#FF9B62" />
+                    </RelativeLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="12.5 km" android:textColor="#333333" android:textSize="22sp" android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Runs" android:textColor="#666666" android:textSize="12sp" />
+                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_alignParentEnd="true" android:src="@android:drawable/ic_menu_recent_history" app:tint="#FF7243" />
+                    </RelativeLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="4 runs" android:textColor="#333333" android:textSize="22sp" android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </GridLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginBottom="16dp"
+            android:text="Recent Activity"
+            android:textColor="#333333"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="24dp">
 
-            <TextView
-                android:id="@+id/tvWelcome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/welcome_back_home_default"
-                android:textColor="@color/runna_text_primary"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="@string/ready_next_run"
-                android:textColor="@color/runna_text_secondary"
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:id="@+id/btnStartRunning"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_marginTop="22dp"
-                android:background="@drawable/bg_button_primary"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_pulse"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/start_running"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btnChallengesHome"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_challenge_gradient"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="20dp"
-                android:paddingTop="16dp"
-                android:paddingEnd="20dp"
-                android:paddingBottom="16dp">
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="20dp">
+                    <TextView android:id="@+id/tvRunName1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Easy Run" android:textColor="#333333" android:textSize="18sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="Today" android:textColor="#888888" android:textSize="12sp" />
+                    <TextView android:id="@+id/tvRunStats1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/tvRunName1" android:layout_marginTop="6dp" android:text="5.2 km • 28:45" android:textColor="#666666" android:textSize="14sp" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
-                <!-- White rounded square -->
-                <View
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
-                    android:background="@drawable/bg_white_rounded_rect" />
-
-                <!-- Text content -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/challenges"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/challenges_subtitle"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <!-- Chevron -->
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_right_white" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_marginBottom="14dp"
-                android:text="@string/this_week_label"
-                android:textColor="@color/runna_text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="20dp">
+                    <TextView android:id="@+id/tvRunName2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Long Run" android:textColor="#333333" android:textSize="18sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="Yesterday" android:textColor="#888888" android:textSize="12sp" />
+                    <TextView android:id="@+id/tvRunStats2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/tvRunName2" android:layout_marginTop="6dp" android:text="10.0 km • 58:30" android:textColor="#666666" android:textSize="14sp" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="118dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_card_subtle"
-                    android:gravity="center"
-                    android:text="@string/total_distance_card"
-                    android:textAlignment="center"
-                    android:textColor="@color/runna_text_primary"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="118dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_card_subtle"
-                    android:gravity="center"
-                    android:text="@string/avg_pace_card"
-                    android:textAlignment="center"
-                    android:textColor="@color/runna_text_primary"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="20dp">
+                    <TextView android:id="@+id/tvRunName3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Interval" android:textColor="#333333" android:textSize="18sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="2 days ago" android:textColor="#888888" android:textSize="12sp" />
+                    <TextView android:id="@+id/tvRunStats3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/tvRunName3" android:layout_marginTop="6dp" android:text="4.0 km • 20:15" android:textColor="#666666" android:textSize="14sp" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="118dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_card_subtle"
-                    android:gravity="center"
-                    android:text="@string/active_days_card"
-                    android:textAlignment="center"
-                    android:textColor="@color/runna_text_primary"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="118dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_card_subtle"
-                    android:gravity="center"
-                    android:text="@string/total_runs_card"
-                    android:textAlignment="center"
-                    android:textColor="@color/runna_text_primary"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_marginBottom="14dp"
-                android:text="@string/recent_activity_title"
-                android:textColor="@color/runna_text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_card_subtle"
-                android:padding="22dp"
-                android:text="@string/recent_activity_text"
-                android:textColor="@color/runna_text_primary"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- Bottom Nav with Icons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="@drawable/bg_nav"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/navHome"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_home_outline" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/home"
-                android:textColor="@color/runna_primary"
-                android:textSize="11sp"
-                android:textStyle="bold" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/navStart"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+        <View android:layout_width="match_parent" android:layout_height="80dp" />
 
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_pulse" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/start"
-                android:textColor="@color/runna_text_secondary"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/navHistory"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_history" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/history"
-                android:textColor="@color/runna_text_secondary"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/navProfile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_profile" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/profile"
-                android:textColor="@color/runna_text_secondary"
-                android:textSize="11sp" />
-        </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
