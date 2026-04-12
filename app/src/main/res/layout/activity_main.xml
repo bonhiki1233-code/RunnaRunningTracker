@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,16 +16,6 @@
         <TextView android:id="@+id/showRegisterText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/register_prompt"/>
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/registerScreen"
-        android:layout_width="match_parent" android:layout_height="match_parent"
-        android:orientation="vertical" android:padding="20dp" android:visibility="gone">
-        <EditText android:id="@+id/registerNameInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/hint_name"/>
-        <EditText android:id="@+id/registerEmailInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/hint_email"/>
-        <EditText android:id="@+id/registerPasswordInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/hint_create_password"/>
-        <EditText android:id="@+id/registerConfirmPasswordInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/hint_confirm_password"/>
-        <Button android:id="@+id/createAccountButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/create_account"/>
-        <Button android:id="@+id/backToLoginButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Back"/>
-    </LinearLayout>
 
     <LinearLayout android:id="@+id/personalInfoScreen"
         android:layout_width="match_parent" android:layout_height="match_parent"

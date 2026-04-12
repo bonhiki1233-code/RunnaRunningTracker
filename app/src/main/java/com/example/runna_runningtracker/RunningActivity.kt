@@ -29,17 +29,31 @@ class RunningActivity : AppCompatActivity() {
         // Bắt đầu chạy bộ đếm thời gian
         runTimer()
 
-        // Xử lý sự kiện nút Pause
+        val pausePanel = findViewById<android.widget.LinearLayout>(R.id.pausePanel)
+        val btnOverlayResume = findViewById<Button>(R.id.btnOverlayResume)
+        val btnOverlayFinish = findViewById<Button>(R.id.btnOverlayFinish)
+
+        // Xử lý sự kiện nút Pause ban đầu (ở thẻ đếm thời gian)
         btnPause.setOnClickListener {
             if (running) {
                 running = false
-                btnPause.text = "Resume"
-                btnPause.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_media_play, 0, 0, 0)
-            } else {
-                running = true
-                btnPause.text = "Pause"
-                btnPause.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_media_pause, 0, 0, 0)
+                findViewById<TextView>(R.id.tvPauseTime).text = tvDurationClock.text
+                pausePanel.visibility = android.view.View.VISIBLE
             }
+        }
+
+        // Xử lý nút Resume trên màn hình Overlay
+        btnOverlayResume.setOnClickListener {
+            pausePanel.visibility = android.view.View.GONE
+            running = true
+        }
+
+        // Xử lý nút Finish trên màn hình Overlay
+        btnOverlayFinish.setOnClickListener {
+            // Chuyển sang trang Summary
+            val intent = android.content.Intent(this, SummaryActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 

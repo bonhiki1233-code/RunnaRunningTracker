@@ -11,6 +11,8 @@ class HistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history) // Tên file XML của bạn
 
+        NavigationHelper.setupBottomNav(this, NavigationHelper.ActiveTab.HISTORY)
+
         // Ánh xạ nút sắp xếp (a-z) nếu bạn muốn thêm tính năng click
         val imgSort = findViewById<ImageView>(R.id.imgSort)
         // Lưu ý: Bạn cần thêm android:id="@+id/imgSort" vào ImageView trong XML của bạn

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Runna Running Tracker</string>
     <string name="brand_name">Runna</string>
-    <string name="app_info_text">Runna build by nghi</string>
+    <string name="app_info_text">Runna build by nhom 9</string>
     <string name="close">Close</string>
     <string name="done">Done</string>
     <string name="continue_label">Continue</string>
@@ -66,13 +66,26 @@
     <string name="pause_stats_format">Time: %1$02d:%2$02d | Distance: %3$.2f km</string>
     <string name="summary_stats_format">Time: %1$02d:%2$02d\nDistance: %3$.2f km\nCalories: %4$d kcal</string>
     <string name="great_job">Great Job!\nYou completed your run</string>
+    <string name="home">Home</string>
     <string name="history">History</string>
+    <string name="challenges">Challenges</string>
+    <string name="my_challenges">My Challenges</string>
+    <string name="popular">Popular</string>
+    <string name="ending_soon">Ending Soon</string>
+    <string name="challenge_distance">Distance Challenge</string>
+    <string name="challenge_speed">Speed Challenge</string>
+    <string name="join">Join</string>
+    <string name="joined">Joined</string>
 
     <string name="please_enter_email_password">Please enter email and password</string>
     <string name="login_successful">Login successful</string>
     <string name="login_failed">Login failed: %1$s</string>
     <string name="fill_all_register_fields">Please fill all fields</string>
     <string name="password_min_length">Password must be at least 6 characters</string>
+    <string name="invalid_email">Please enter a valid email</string>
+    <string name="password_rule_helper">Password must be 7-10 characters, letters and numbers only, with at least 1 uppercase, 1 lowercase, and 1 number.</string>
+    <string name="password_rule_error">Password must be 7-10 characters, letters and numbers only, with uppercase, lowercase, and number.</string>
+    <string name="register_back_to_login">Already have an account? Login</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="register_failed">Register failed: %1$s</string>
     <string name="please_enter_email">Please enter email</string>

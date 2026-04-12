@@ -1,54 +1,44 @@
 package com.example.runna_runningtracker
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 
 class StartRunningActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 1. Phải khớp với tên file XML của bạn
         setContentView(R.layout.activity_start_running)
 
-        // 2. Ánh xạ các View từ XML
-        val cardEasyRun = findViewById<CardView>(R.id.cardEasyRun)
-        val cardLongRun = findViewById<CardView>(R.id.cardLongRun)
-        val cardIntervalRun = findViewById<CardView>(R.id.cardIntervalRun)
-        val cardWalking = findViewById<CardView>(R.id.cardWalking)
-        val btnStartRun = findViewById<CardView>(R.id.btnStartRun)
+        NavigationHelper.setupBottomNav(this, NavigationHelper.ActiveTab.START)
 
-        val txtGpsStatus = findViewById<TextView>(R.id.txtGpsStatus)
-        val txtLastRun = findViewById<TextView>(R.id.txtLastRun)
-        val txtWeeklyGoal = findViewById<TextView>(R.id.txtWeeklyGoal)
+        val btnFinalStartRun = findViewById<Button>(R.id.btnFinalStartRun)
+        val cardEasyRun = findViewById<LinearLayout>(R.id.cardEasyRun)
+        val cardLongRun = findViewById<LinearLayout>(R.id.cardLongRun)
+        val cardInterval = findViewById<LinearLayout>(R.id.cardInterval)
+        val cardWalking = findViewById<LinearLayout>(R.id.cardWalking)
 
-        // 3. Thiết lập sự kiện click
-        cardEasyRun.setOnClickListener {
-            showToast("Bạn đã chọn: Easy Run")
+        val cards = listOf(cardEasyRun, cardLongRun, cardInterval, cardWalking)
+        val modes = listOf(getString(R.string.run_type_easy), "Long Run", "Interval", "Walking")
+        var selectedMode = modes[0]
+
+        fun updateSelection(selectedCard: LinearLayout, mode: String) {
+            cards.forEach { it.setBackgroundResource(R.drawable.bg_card_subtle) }
+            selectedCard.setBackgroundResource(R.drawable.bg_button_outline)
+            selectedMode = mode
         }
 
-        cardLongRun.setOnClickListener {
-            showToast("Bạn đã chọn: Long Run")
-        }
+        cardEasyRun.setOnClickListener { updateSelection(cardEasyRun, modes[0]) }
+        cardLongRun.setOnClickListener { updateSelection(cardLongRun, modes[1]) }
+        cardInterval.setOnClickListener { updateSelection(cardInterval, modes[2]) }
+        cardWalking.setOnClickListener { updateSelection(cardWalking, modes[3]) }
 
-        cardIntervalRun.setOnClickListener {
-            showToast("Bạn đã chọn: Interval Run")
+        btnFinalStartRun.setOnClickListener {
+            val intent = Intent(this, RunningActivity::class.java)
+            intent.putExtra("RUN_MODE", selectedMode)
+            startActivity(intent)
         }
-
-        cardWalking.setOnClickListener {
-            showToast("Bạn đã chọn: Walking")
-        }
-
-        btnStartRun.setOnClickListener {
-            showToast("Bắt đầu chạy thôi! Giao diện GPS đang khởi động...")
-            // Chèn code chuyển màn hình hoặc logic chạy ở đây
-        }
-    }
-
-    // Hàm phụ để hiển thị thông báo nhanh
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

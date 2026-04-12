@@ -12,16 +12,10 @@ class ChallengesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_challenges)
 
-        val navHome = findViewById<View>(R.id.navHome)
-        val navHistory = findViewById<View>(R.id.navHistory)
-        val navProfile = findViewById<View>(R.id.navProfile)
+        NavigationHelper.setupBottomNav(this, NavigationHelper.ActiveTab.CHALLENGES)
         
         val btnAddChallenge = findViewById<ImageView>(R.id.btnAddChallenge)
         val cardChallenge1 = findViewById<View>(R.id.cardChallenge1)
-
-        navHome.setOnClickListener { startActivity(Intent(this, HomeActivity::class.java)) }
-        navHistory.setOnClickListener { startActivity(Intent(this, HistoryActivity::class.java)) }
-        navProfile.setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
         
         btnAddChallenge.setOnClickListener {
             startActivity(Intent(this, CreateChallengeActivity::class.java))

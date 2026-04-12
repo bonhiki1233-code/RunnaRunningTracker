@@ -24,13 +24,11 @@ import java.util.Locale
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginScreen: View
-    private lateinit var registerScreen: View
     private lateinit var personalInfoScreen: View
     private lateinit var forgotPasswordOverlay: View
 
     private lateinit var loginEmailInput: EditText
     private lateinit var loginPasswordInput: EditText
-    private lateinit var registerNameInput: EditText
     private lateinit var registerEmailInput: EditText
     private lateinit var registerPasswordInput: EditText
     private lateinit var registerConfirmPasswordInput: EditText
@@ -48,13 +46,13 @@ class LoginActivity : AppCompatActivity() {
 
     private var pendingRegisterUid: String? = null
     private var currentUser = User(
-        name = "Nghi",
-        email = "nghi@gmail.com",
-        age = "19",
+        name = "",
+        email = "",
+        age = "",
         birthDate = "",
-        gender = "Female",
-        height = "165",
-        weight = "62"
+        gender = "",
+        height = "",
+        weight = ""
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,21 +67,25 @@ class LoginActivity : AppCompatActivity() {
         setupProfilePickers()
         styleInlineRegisterText()
         bindActions()
-        checkExistingSession()
+
+        if (intent.getBooleanExtra("SHOW_PERSONAL_INFO", false)) {
+            val email = intent.getStringExtra("USER_EMAIL") ?: ""
+            val uid = intent.getStringExtra("USER_UID")
+            currentUser = currentUser.copy(name = "", email = email)
+            pendingRegisterUid = uid
+            showPersonalInfoScreen()
+        } else {
+            checkExistingSession()
+        }
     }
 
     private fun bindViews() {
         loginScreen = findViewById(R.id.loginScreen)
-        registerScreen = findViewById(R.id.registerScreen)
         personalInfoScreen = findViewById(R.id.personalInfoScreen)
         forgotPasswordOverlay = findViewById(R.id.forgotPasswordOverlay)
 
         loginEmailInput = findViewById(R.id.loginEmailInput)
         loginPasswordInput = findViewById(R.id.loginPasswordInput)
-        registerNameInput = findViewById(R.id.registerNameInput)
-        registerEmailInput = findViewById(R.id.registerEmailInput)
-        registerPasswordInput = findViewById(R.id.registerPasswordInput)
-        registerConfirmPasswordInput = findViewById(R.id.registerConfirmPasswordInput)
         personalNameInput = findViewById(R.id.personalNameInput)
         personalEmailInput = findViewById(R.id.personalEmailInput)
         personalAgeInput = findViewById(R.id.personalAgeInput)
@@ -110,13 +112,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun bindActions() {
         showRegisterText.setOnClickListener {
-            loginScreen.visibility = View.GONE
-            registerScreen.visibility = View.VISIBLE
-        }
-
-        findViewById<View>(R.id.backToLoginButton).setOnClickListener {
-            registerScreen.visibility = View.GONE
-            loginScreen.visibility = View.VISIBLE
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         findViewById<TextView>(R.id.forgotPasswordText).setOnClickListener {
@@ -126,7 +122,6 @@ class LoginActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.sendResetButton).setOnClickListener { handleForgotPassword() }
         findViewById<Button>(R.id.loginButton).setOnClickListener { handleLogin() }
-        findViewById<Button>(R.id.createAccountButton).setOnClickListener { handleRegister() }
         findViewById<Button>(R.id.completeProfileButton).setOnClickListener { completePersonalInfo() }
     }
 
@@ -148,7 +143,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkExistingSession() {
         val currentUserId = authRepository.getCurrentUserId() ?: return
-        goToHome(currentUserId)
+        loadProfileAndGoHome(currentUserId)
     }
 
     private fun handleLogin() {
@@ -165,45 +160,10 @@ class LoginActivity : AppCompatActivity() {
             password = password,
             onSuccess = { uid ->
                 Toast.makeText(this, getString(R.string.login_successful), Toast.LENGTH_SHORT).show()
-                goToHome(uid)
+                loadProfileAndGoHome(uid)
             },
             onFailure = { error ->
                 Toast.makeText(this, getString(R.string.login_failed, error), Toast.LENGTH_SHORT).show()
-            }
-        )
-    }
-
-    private fun handleRegister() {
-        val name = registerNameInput.text.toString().trim()
-        val email = registerEmailInput.text.toString().trim()
-        val password = registerPasswordInput.text.toString().trim()
-        val confirmPassword = registerConfirmPasswordInput.text.toString().trim()
-
-        if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-            Toast.makeText(this, getString(R.string.fill_all_register_fields), Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (password.length < 6) {
-            Toast.makeText(this, getString(R.string.password_min_length), Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (password != confirmPassword) {
-            Toast.makeText(this, getString(R.string.passwords_do_not_match), Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        authRepository.register(
-            email = email,
-            password = password,
-            onSuccess = { uid ->
-                currentUser = currentUser.copy(name = name, email = email)
-                pendingRegisterUid = uid
-                showPersonalInfoScreen(name, email)
-            },
-            onFailure = { error ->
-                Toast.makeText(this, getString(R.string.register_failed, error), Toast.LENGTH_SHORT).show()
             }
         )
     }
@@ -228,16 +188,15 @@ class LoginActivity : AppCompatActivity() {
         )
     }
 
-    private fun showPersonalInfoScreen(name: String, email: String) {
+    private fun showPersonalInfoScreen() {
         loginScreen.visibility = View.GONE
-        registerScreen.visibility = View.GONE
         personalInfoScreen.visibility = View.VISIBLE
-        personalNameInput.setText(name)
-        personalEmailInput.setText(email)
-        personalAgeInput.setText(currentUser.birthDate)
-        personalGenderInput.setText(currentUser.gender)
-        personalHeightInput.setText(currentUser.height)
-        personalWeightInput.setText(currentUser.weight)
+        personalNameInput.setText("")
+        personalEmailInput.setText(currentUser.email)
+        personalAgeInput.setText("")
+        personalGenderInput.setText("")
+        personalHeightInput.setText("")
+        personalWeightInput.setText("")
     }
 
     private fun completePersonalInfo() {
@@ -261,6 +220,7 @@ class LoginActivity : AppCompatActivity() {
         userRepository.createUserProfile(
             user = currentUser,
             onSuccess = {
+                UserPrefsManager.saveUser(this, currentUser)
                 Toast.makeText(this, getString(R.string.register_successful), Toast.LENGTH_SHORT).show()
                 goToHome(finalUid)
             },
@@ -275,6 +235,27 @@ class LoginActivity : AppCompatActivity() {
         intent.putExtra(HomeActivity.EXTRA_USER_ID, uid)
         startActivity(intent)
         finish()
+    }
+
+    private fun loadProfileAndGoHome(uid: String?) {
+        if (uid.isNullOrBlank()) {
+            goToHome(null)
+            return
+        }
+
+        userRepository.loadUserProfile(
+            uid = uid,
+            onSuccess = { user ->
+                currentUser = user.copy(uid = uid)
+                UserPrefsManager.saveUser(this, currentUser)
+                goToHome(uid)
+            },
+            onFailure = {
+                // Nếu Firestore chưa có profile thì vẫn cho vào app bằng dữ liệu tối thiểu.
+                UserPrefsManager.saveUser(this, currentUser.copy(uid = uid))
+                goToHome(uid)
+            }
+        )
     }
 
     private fun setupProfilePickers() {
