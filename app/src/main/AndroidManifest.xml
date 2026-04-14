@@ -1,5 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- INTERNET -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- GPS -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- NETWORK -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -8,58 +17,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <meta-data
+            android:name="org.osmdroid.config.userAgentValue"
+            android:value="runnaApp"/>
 
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false"/>
 
-        <activity
-            android:name=".SummaryActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".RunningActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".HistoryActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".StartRunningActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ChallengesActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ChallengeDetailsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".CreateChallengeActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".HomeActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+        <!-- Activities -->
+        <activity android:name=".RegisterActivity"/>
+        <activity android:name=".SummaryActivity"/>
+        <activity android:name=".RunningActivity"/>
+        <activity android:name=".ProfileActivity"/>
+        <activity android:name=".HistoryActivity"/>
+        <activity android:name=".StartRunningActivity"/>
+        <activity android:name=".ChallengesActivity"/>
+        <activity android:name=".ChallengeDetailsActivity"/>
+        <activity android:name=".CreateChallengeActivity"/>
+        <activity android:name=".HomeActivity"/>
+        <activity android:name=".MainActivity"/>
 
         <activity
             android:name=".LoginActivity"
             android:exported="true">
+
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
 
     </application>

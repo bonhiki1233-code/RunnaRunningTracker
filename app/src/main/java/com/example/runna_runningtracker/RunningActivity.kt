@@ -1,92 +1,232 @@
 package com.example.runna_runningtracker
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.Button
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.*
+import org.osmdroid.config.Configuration
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Polyline
 import java.util.Locale
+import org.osmdroid.views.overlay.Marker
 
 class RunningActivity : AppCompatActivity() {
+    private lateinit var userMarker: Marker
+    private lateinit var tvDistanceMain: TextView
+    private lateinit var tvCaloriesMain: TextView
+    private lateinit var tvPaceMain: TextView
 
-    // Các biến cho bộ đếm thời gian
+    private lateinit var mapView: MapView
+    private lateinit var polyline: Polyline
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+
     private lateinit var tvDurationClock: TextView
     private lateinit var btnPause: Button
 
     private var seconds = 0
-    private var running = true // Bật để tự chạy khi mở màn hình
+    private var running = true
     private val handler = Handler(Looper.getMainLooper())
+
+    private var totalDistance = 0f
+    private var lastLocation: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_running)
 
-        // Ánh xạ View
+        Configuration.getInstance().load(this, getSharedPreferences("osm", MODE_PRIVATE))
+
+        setContentView(R.layout.activity_running)
+        tvDistanceMain = findViewById(R.id.tvDistanceMain)
+        tvCaloriesMain = findViewById(R.id.tvCaloriesMain)
+        tvPaceMain = findViewById(R.id.tvPaceMain)
+
+        mapView = findViewById(R.id.osmMap)
+        mapView.setMultiTouchControls(true)
+
+        polyline = Polyline()
+        mapView.overlays.add(polyline)
+
+        userMarker = Marker(mapView)
+        userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        mapView.overlays.add(userMarker)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         tvDurationClock = findViewById(R.id.tvDurationClock)
         btnPause = findViewById(R.id.btnPause)
 
-        // Bắt đầu chạy bộ đếm thời gian
-        runTimer()
-
-        val pausePanel = findViewById<android.widget.LinearLayout>(R.id.pausePanel)
+        val pausePanel = findViewById<LinearLayout>(R.id.pausePanel)
         val btnOverlayResume = findViewById<Button>(R.id.btnOverlayResume)
         val btnOverlayFinish = findViewById<Button>(R.id.btnOverlayFinish)
 
-        // Xử lý sự kiện nút Pause ban đầu (ở thẻ đếm thời gian)
+        runTimer()
+
         btnPause.setOnClickListener {
-            if (running) {
-                running = false
-                findViewById<TextView>(R.id.tvPauseTime).text = tvDurationClock.text
-                pausePanel.visibility = android.view.View.VISIBLE
-            }
+            running = false
+            findViewById<TextView>(R.id.tvPauseTime).text = tvDurationClock.text
+            pausePanel.visibility = View.VISIBLE
         }
 
-        // Xử lý nút Resume trên màn hình Overlay
         btnOverlayResume.setOnClickListener {
-            pausePanel.visibility = android.view.View.GONE
+            pausePanel.visibility = View.GONE
             running = true
         }
 
-        // Xử lý nút Finish trên màn hình Overlay
         btnOverlayFinish.setOnClickListener {
-            // Chuyển sang trang Summary
-            val intent = android.content.Intent(this, SummaryActivity::class.java)
+
+            val distanceKm = totalDistance / 1000.0
+            val pace = if (distanceKm > 0)
+                (seconds / 60.0) / distanceKm
+            else 0.0
+
+            val intent = Intent(this, SummaryActivity::class.java)
+            intent.putExtra("distance", distanceKm)
+            intent.putExtra("duration", seconds)
+            intent.putExtra("pace", pace)
+
             startActivity(intent)
             finish()
         }
+
+        startLocationUpdates()
     }
 
-    // Logic bộ đếm thời gian (00:00)
+    private fun startLocationUpdates() {
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                1
+            )
+            return
+        }
+
+        val locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            1000
+        ).build()
+
+        locationCallback = object : LocationCallback() {
+
+            override fun onLocationResult(locationResult: LocationResult) {
+
+                val location = locationResult.lastLocation ?: return
+
+                if (location.accuracy > 30) return
+
+                val geoPoint = GeoPoint(location.latitude, location.longitude)
+                userMarker.position = geoPoint
+                userMarker.title = "Bạn đang ở đây"
+                userMarker.icon = getDrawable(org.osmdroid.library.R.drawable.marker_default)
+
+                // DISTANCE
+                lastLocation?.let {
+                    val distance = it.distanceTo(location)
+                    if (distance in 2f..30f) {
+                        totalDistance += distance
+                    }
+                }
+
+                if (lastLocation == null) {
+                    mapView.controller.setZoom(18.0)
+                    mapView.controller.setCenter(geoPoint)
+                } else {
+                    mapView.controller.animateTo(geoPoint)
+                }
+
+                lastLocation = location
+
+                polyline.addPoint(geoPoint)
+                mapView.invalidate()
+
+                val distanceKm = totalDistance / 1000.0
+                tvDistanceMain.text = String.format("%.2f", distanceKm)
+
+                val calories = (distanceKm * 60).toInt()
+                tvCaloriesMain.text = calories.toString()
+
+                if (distanceKm > 0.05) {
+                    val pace = (seconds.toDouble() / 60) / distanceKm
+                    val paceMin = pace.toInt()
+                    val paceSec = ((pace - paceMin) * 60).toInt()
+
+                    tvPaceMain.text =
+                        String.format(Locale.getDefault(), "%d:%02d /km", paceMin, paceSec)
+                }
+            }
+
+        }
+
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
+    }
+
     private fun runTimer() {
+
         handler.post(object : Runnable {
+
             override fun run() {
-                val hours = seconds / 3600
-                val minutes = (seconds % 3600) / 60
+
+                val minutes = seconds / 60
                 val secs = seconds % 60
 
-                // Định dạng hiển thị MM:SS (hoặc HH:MM:SS nếu > 1 tiếng)
-                val time = if (hours > 0) {
-                    String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, secs)
-                } else {
+                tvDurationClock.text =
                     String.format(Locale.getDefault(), "%02d:%02d", minutes, secs)
-                }
 
-                tvDurationClock.text = time
+                if (running) seconds++
 
-                if (running) {
-                    seconds++
-                }
-
-                // Lặp lại sau mỗi 1 giây
                 handler.postDelayed(this, 1000)
             }
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        // Dừng handler khi đóng activity để tránh leak memory
-        handler.removeCallbacksAndMessages(null)
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == 1 &&
+            grantResults.isNotEmpty() &&
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            startLocationUpdates()
+        }
     }
 }
+
