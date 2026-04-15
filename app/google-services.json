@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "630780883402",
+    "project_id": "runna-b6056",
+    "storage_bucket": "runna-b6056.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630780883402:android:2f7f71d7ca9f3df22a1f33",
+        "android_client_info": {
+          "package_name": "com.example.runna_runningtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBi3bIxMY8QYwlFyTIPBJOahbTJWRMw64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
