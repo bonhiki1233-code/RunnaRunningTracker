@@ -18,6 +18,8 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Polyline
 import java.util.Locale
 import org.osmdroid.views.overlay.Marker
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class RunningActivity : AppCompatActivity() {
     private lateinit var userMarker: Marker
@@ -96,11 +98,15 @@ class RunningActivity : AppCompatActivity() {
                 (distanceKm * 60).toInt()
             }
 
+            val pathPoints = polyline.actualPoints
+            val pathJson = Gson().toJson(pathPoints)
+
             val intent = Intent(this, SummaryActivity::class.java).apply {
                 putExtra("distance", distanceKm)
                 putExtra("duration", seconds)
                 putExtra("pace", if (distanceKm > 0) (seconds/60.0) / distanceKm else 0.0)
                 putExtra("calories",finalCalories)
+                putExtra("path_data", pathJson)
             }
             startActivity(intent)
             finish()
