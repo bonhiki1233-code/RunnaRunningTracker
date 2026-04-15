@@ -212,6 +212,7 @@ class RunningActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
     override fun onRequestPermissionsResult(
