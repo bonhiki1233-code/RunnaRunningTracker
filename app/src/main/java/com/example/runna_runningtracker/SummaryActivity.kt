@@ -15,11 +15,13 @@ class SummaryActivity : AppCompatActivity() {
         val tvDuration = findViewById<TextView>(R.id.tvSumDuration)
         val tvDistance = findViewById<TextView>(R.id.tvSumDistance)
         val tvPace = findViewById<TextView>(R.id.tvSumPace)
+        val tvCalories = findViewById<TextView>(R.id.tvSumCal)
         val btnDone = findViewById<Button>(R.id.btnDone)
 
         val duration = intent.getIntExtra("duration",0)
         val distance = intent.getDoubleExtra("distance",0.0)
         val pace = intent.getDoubleExtra("pace",0.0)
+        val calories = intent.getIntExtra("calories", 0)
 
         val minutes = duration / 60
         val seconds = duration % 60
@@ -31,6 +33,7 @@ class SummaryActivity : AppCompatActivity() {
         val paceSec = ((pace - paceMin) * 60).toInt()
 
         tvPace.text = String.format("%d:%02d", paceMin, paceSec)
+        tvCalories.text = calories.toString()
 
         btnDone.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)

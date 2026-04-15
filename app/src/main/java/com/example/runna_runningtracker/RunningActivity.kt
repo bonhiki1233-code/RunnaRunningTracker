@@ -74,7 +74,9 @@ class RunningActivity : AppCompatActivity() {
 
         btnPause.setOnClickListener {
             running = false
-            findViewById<TextView>(R.id.tvPauseTime).text = tvDurationClock.text
+            val timeString = tvDurationClock.text.toString()
+            findViewById<TextView>(R.id.tvPauseTime).text = timeString
+            //findViewById<TextView>(R.id.tvPauseTime).text = tvDurationClock.text
             pausePanel.visibility = View.VISIBLE
         }
 
@@ -84,17 +86,22 @@ class RunningActivity : AppCompatActivity() {
         }
 
         btnOverlayFinish.setOnClickListener {
-
+            running = false
             val distanceKm = totalDistance / 1000.0
-            val pace = if (distanceKm > 0)
-                (seconds / 60.0) / distanceKm
-            else 0.0
 
-            val intent = Intent(this, SummaryActivity::class.java)
-            intent.putExtra("distance", distanceKm)
-            intent.putExtra("duration", seconds)
-            intent.putExtra("pace", pace)
+            val userWeight = UserPrefsManager.getUserWeightOrNull(this)
+            val finalCalories = if (userWeight != null && userWeight > 0) {
+                (1.036 * userWeight * distanceKm).toInt()
+            } else {
+                (distanceKm * 60).toInt()
+            }
 
+            val intent = Intent(this, SummaryActivity::class.java).apply {
+                putExtra("distance", distanceKm)
+                putExtra("duration", seconds)
+                putExtra("pace", if (distanceKm > 0) (seconds/60.0) / distanceKm else 0.0)
+                putExtra("calories",finalCalories)
+            }
             startActivity(intent)
             finish()
         }
@@ -158,8 +165,12 @@ class RunningActivity : AppCompatActivity() {
 
                 val distanceKm = totalDistance / 1000.0
                 tvDistanceMain.text = String.format("%.2f", distanceKm)
-
-                val calories = (distanceKm * 60).toInt()
+                val userWeight = UserPrefsManager.getUserWeightOrNull(this@RunningActivity)
+                val calories = if (userWeight != null && userWeight > 0) {
+                    (1.036 * userWeight *distanceKm).toInt()
+                } else {
+                    (distanceKm * 60).toInt()
+                }
                 tvCaloriesMain.text = calories.toString()
 
                 if (distanceKm > 0.05) {
