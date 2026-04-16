@@ -13,7 +13,7 @@ class UserRepository(
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
-        // Tao profile lan dau sau khi user register xong va dien xong thong tin ca nhan.
+        // Tao profile lan dau sau khi register va complete info
         firestore.collection(User.COLLECTION_USERS).document(user.uid)
             .set(user.toMap())
             .addOnSuccessListener { onSuccess() }
@@ -25,7 +25,7 @@ class UserRepository(
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
-        // Merge de cap nhat tung field profile ma khong ghi de toan bo document.
+        // Merge de update tung field profile ma khong de mat field cu
         firestore.collection(User.COLLECTION_USERS).document(user.uid)
             .set(user.toMap(), SetOptions.merge())
             .addOnSuccessListener { onSuccess() }
@@ -38,11 +38,11 @@ class UserRepository(
         onSuccess: (User) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        // Moi lan login/open app, Activity se goi ham nay de dong bo profile tu Firestore.
+        // Moi lan login hoac mo app lai thi se doc profile tu Firestore
         firestore.collection(User.COLLECTION_USERS).document(uid)
             .get()
             .addOnSuccessListener { document ->
-                // Neu user moi chua co profile thi tra ve User rong de he thong quyet dinh
+                // Chua co profile thi tra ve user rong de flow tu xu ly tiep
                 if (!document.exists()) {
                     onSuccess(User(uid = uid))
                     return@addOnSuccessListener
@@ -50,10 +50,13 @@ class UserRepository(
                 onSuccess(User.fromMap(uid, document.data))
             }
             .addOnFailureListener { error -> onFailure(error.message ?: "Unknown load profile error") }
-    }fun getUser(
+    }
+
+    fun getUser(
         uid: String,
         callback: (User?) -> Unit
     ) {
+        // Ham nay doc nhanh 1 user khi chi can callback don gian
         firestore.collection(User.COLLECTION_USERS)
             .document(uid)
             .get()

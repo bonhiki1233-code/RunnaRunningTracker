@@ -19,6 +19,7 @@ object UserPrefsManager {
     private const val KEY_WEIGHT = "weight"
 
     fun saveUser(context: Context, user: User) {
+        // Luu cache local de Home va Profile doc nhanh hon Firestore
         val ageToSave = calculateAgeFromBirthDate(user.birthDate).ifBlank { user.age }
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
@@ -34,13 +35,23 @@ object UserPrefsManager {
     }
 
     fun clear(context: Context) {
+        // Logout se xoa sach cache local trong may
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .clear()
             .apply()
     }
 
+    fun getUserWeightOrNull(context: Context): Double? {
+        // Can nang duoc doi sang so de tinh calories luc finish run
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getString(KEY_WEIGHT, null)
+            ?.trim()
+            ?.toDoubleOrNull()
+    }
+
     private fun calculateAgeFromBirthDate(birthDate: String): String {
+        // Tuoi luon tinh lai tu ngay sinh de tranh bi cu theo thoi gian
         if (birthDate.isBlank()) return ""
 
         return runCatching {
