@@ -18,7 +18,6 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Polyline
 import java.util.Locale
 import org.osmdroid.views.overlay.Marker
-import com.google.gson.Gson
 import java.util.UUID
 
 class RunningActivity : AppCompatActivity() {
@@ -30,7 +29,7 @@ class RunningActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var polyline: Polyline
 
-    private var runType : String ="";
+    private var run_type : String ="";
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
 
@@ -42,19 +41,22 @@ class RunningActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
     private var totalDistance = 0f
+
+    private var startTime :Long =0L;
     private var lastLocation: Location? = null
     private var calories: Int =0;
-    private var runId : String="";
+    private var run_id : String="";
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Configuration.getInstance().load(this, getSharedPreferences("osm", MODE_PRIVATE))
-
+        //set thoi gian cho start khi man hinh nay chay
+        startTime = System.currentTimeMillis();
         //set id cho phien chay nay
-        runId= UUID.randomUUID().toString();
+        run_id= UUID.randomUUID().toString();
 
         //lay run type tu intent
-        runType =intent.getStringExtra("RUN_MODE")?:""
+        run_type =intent.getStringExtra("RUN_MODE")?:""
 
 
         setContentView(R.layout.activity_running)
@@ -85,9 +87,7 @@ class RunningActivity : AppCompatActivity() {
 
         btnPause.setOnClickListener {
             running = false
-            val timeString = tvDurationClock.text.toString()
-            findViewById<TextView>(R.id.tvPauseTime).text = timeString
-            //findViewById<TextView>(R.id.tvPauseTime).text = tvDurationClock.text
+            findViewById<TextView>(R.id.tvPauseTime).text = tvDurationClock.text
             pausePanel.visibility = View.VISIBLE
         }
 
@@ -97,33 +97,33 @@ class RunningActivity : AppCompatActivity() {
         }
 
         btnOverlayFinish.setOnClickListener {
-            running = false
+
             val distanceKm = totalDistance / 1000.0
-            val pace = if (distanceKm > 0) (seconds / 60.0) / distanceKm else 0.0
-            val endedAtMillis = System.currentTimeMillis()
-            val runId = "run_$endedAtMillis"
+            val pace = if (distanceKm > 0)
+                (seconds / 60.0) / distanceKm
+            else 0.0
 
-            val userWeight = UserPrefsManager.getUserWeightOrNull(this)
-            val finalCalories = if (userWeight != null && userWeight > 0) {
-                (1.036 * userWeight * distanceKm).toInt()
-            } else {
-                (distanceKm * 60).toInt()
-            }
+            val intent = Intent(this, SummaryActivity::class.java)
+            intent.putExtra("distance", distanceKm)
+            intent.putExtra("duration", seconds)
+            intent.putExtra("pace", pace)
+            intent.putExtra("run_id",run_id)
+            intent.putExtra("end_time", System.currentTimeMillis())
+            intent.putExtra("start_time",startTime)
+            intent.putExtra("calories",calories)
+            intent.putExtra("RUN_MODE",run_type);
+//            data class Run(
+//                val run_id: String = "",
+//                val user_id: String = "",
+//                val distance: Double = 0.0,
+//                val durationSeconds: Int = 0,
+//                val pace: Double = 0.0,
+//                val calories: Int = 0,
+//                val start_time: Long = 0L,
+//                val end_time : Long =0L,
 
-            val pathPoints = polyline.actualPoints
-            val pathJson = Gson().toJson(pathPoints)
+//            )
 
-            val intent = Intent(this, SummaryActivity::class.java).apply {
-                putExtra("distance", distanceKm)
-                putExtra("duration", seconds)
-                putExtra("pace", if (distanceKm > 0) (seconds/60.0) / distanceKm else 0.0)
-                putExtra("calories",finalCalories)
-                putExtra("path_data", pathJson)
-                putExtra("run_id", runId)
-                putExtra("end_time", System.currentTimeMillis())
-                putExtra("RUN_MODE", runType)
-            }
-        fusedLocationClient.removeLocationUpdates(locationCallback)
             startActivity(intent)
             finish()
         }
@@ -186,13 +186,9 @@ class RunningActivity : AppCompatActivity() {
                 mapView.invalidate()
 
                 val distanceKm = totalDistance / 1000.0
-                tvDistanceMain.text = String.format(Locale.getDefault(), "%.2f", distanceKm)
-                val userWeight = UserPrefsManager.getUserWeightOrNull(this@RunningActivity)
-                val calories = if (userWeight != null && userWeight > 0) {
-                    (1.036 * userWeight * distanceKm).toInt()
-                } else {
-                    (distanceKm * 60).toInt()
-                }
+                tvDistanceMain.text = String.format("%.2f", distanceKm)
+
+                 calories = (distanceKm * 60).toInt()
                 tvCaloriesMain.text = calories.toString()
 
                 if (distanceKm > 0.05) {
@@ -245,7 +241,6 @@ class RunningActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
     override fun onRequestPermissionsResult(
