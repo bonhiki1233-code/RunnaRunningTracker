@@ -18,8 +18,6 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Polyline
 import java.util.Locale
 import org.osmdroid.views.overlay.Marker
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class RunningActivity : AppCompatActivity() {
     private lateinit var userMarker: Marker
@@ -90,6 +88,9 @@ class RunningActivity : AppCompatActivity() {
         btnOverlayFinish.setOnClickListener {
             running = false
             val distanceKm = totalDistance / 1000.0
+            val pace = if (distanceKm > 0) (seconds / 60.0) / distanceKm else 0.0
+            val endedAtMillis = System.currentTimeMillis()
+            val runId = "run_$endedAtMillis"
 
             val userWeight = UserPrefsManager.getUserWeightOrNull(this)
             val finalCalories = if (userWeight != null && userWeight > 0) {
@@ -98,15 +99,13 @@ class RunningActivity : AppCompatActivity() {
                 (distanceKm * 60).toInt()
             }
 
-            val pathPoints = polyline.actualPoints
-            val pathJson = Gson().toJson(pathPoints)
-
             val intent = Intent(this, SummaryActivity::class.java).apply {
                 putExtra("distance", distanceKm)
                 putExtra("duration", seconds)
-                putExtra("pace", if (distanceKm > 0) (seconds/60.0) / distanceKm else 0.0)
-                putExtra("calories",finalCalories)
-                putExtra("path_data", pathJson)
+                putExtra("pace", pace)
+                putExtra("calories", finalCalories)
+                putExtra("run_id", runId)
+                putExtra("ended_at", endedAtMillis)
             }
             startActivity(intent)
             finish()
@@ -170,10 +169,10 @@ class RunningActivity : AppCompatActivity() {
                 mapView.invalidate()
 
                 val distanceKm = totalDistance / 1000.0
-                tvDistanceMain.text = String.format("%.2f", distanceKm)
+                tvDistanceMain.text = String.format(Locale.getDefault(), "%.2f", distanceKm)
                 val userWeight = UserPrefsManager.getUserWeightOrNull(this@RunningActivity)
                 val calories = if (userWeight != null && userWeight > 0) {
-                    (1.036 * userWeight *distanceKm).toInt()
+                    (1.036 * userWeight * distanceKm).toInt()
                 } else {
                     (distanceKm * 60).toInt()
                 }
