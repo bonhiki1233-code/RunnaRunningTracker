@@ -7,6 +7,9 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.runna_runningtracker.data.model.Run
+import com.example.runna_runningtracker.data.repository.AuthRepository
+import com.example.runna_runningtracker.data.repository.RunsHistoryRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.osmdroid.config.Configuration
@@ -93,7 +96,17 @@ class SummaryActivity : AppCompatActivity() {
         if(userid!=null)
         {
             Log.d(TAG,"lay thanh cong userid")
-            val runData = Run(run_id,userid,distance, duration,pace,calories,startTime,endTime,run_type)
+            val runData = Run(
+                run_id,
+                userid,
+                distance,
+                duration,
+                pace,
+                calories,
+                startTime,
+                endTime,
+                run_type
+            )
             RunsHistoryRepository.save(runData,){
                     bool ->
                 if(bool)
