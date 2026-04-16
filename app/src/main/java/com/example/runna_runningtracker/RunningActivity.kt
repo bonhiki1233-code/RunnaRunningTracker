@@ -49,8 +49,7 @@ class RunningActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         Configuration.getInstance().load(this, getSharedPreferences("osm", MODE_PRIVATE))
-        //set thoi gian cho start khi man hinh nay chay
-        startTime = System.currentTimeMillis();
+
         //set id cho phien chay nay
         runId= UUID.randomUUID().toString();
 
@@ -111,6 +110,9 @@ class RunningActivity : AppCompatActivity() {
                 (distanceKm * 60).toInt()
             }
 
+            val pathPoints = polyline.actualPoints
+            val pathJson = Gson().toJson(pathPoints)
+
             val intent = Intent(this, SummaryActivity::class.java).apply {
                 putExtra("distance", distanceKm)
                 putExtra("duration", seconds)
@@ -118,7 +120,6 @@ class RunningActivity : AppCompatActivity() {
                 putExtra("calories",finalCalories)
                 putExtra("path_data", pathJson)
                 putExtra("run_id", runId)
-                putExtra("start_time", startTime)
                 putExtra("end_time", System.currentTimeMillis())
                 putExtra("RUN_MODE", runType)
             }
