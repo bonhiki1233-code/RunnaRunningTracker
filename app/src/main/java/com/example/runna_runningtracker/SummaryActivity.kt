@@ -3,6 +3,7 @@ package com.example.runna_runningtracker
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +18,19 @@ import java.util.Locale
 class SummaryActivity : AppCompatActivity() {
 
     private lateinit var mapSummary: MapView
-
+    private var calories: Int = 0
+    private var distance: Double = 0.0
+    private var duration: Int = 0
+    private var pace: Double = 0.0
+    private var run_id: String = ""
+    private var run_type: String = ""
+    private var startTime: Long = 0L
+    private var endTime: Long = 0L
+    private val TAG = "SummaryActivity"
+  
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         Configuration.getInstance().load(this, getSharedPreferences("osm_summary", MODE_PRIVATE))
-
         setContentView(R.layout.activity_summary)
 
         val tvDuration = findViewById<TextView>(R.id.tvSumDuration)
@@ -34,12 +42,17 @@ class SummaryActivity : AppCompatActivity() {
         mapSummary.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.DEFAULT_TILE_SOURCE)
         mapSummary.setMultiTouchControls(true)
 
-        val duration = intent.getIntExtra("duration",0)
-        val distance = intent.getDoubleExtra("distance",0.0)
-        val pace = intent.getDoubleExtra("pace",0.0)
-        val calories = intent.getIntExtra("calories", 0)
+        duration = intent.getIntExtra("duration", 0)
+        distance = intent.getDoubleExtra("distance", 0.0)
+        pace = intent.getDoubleExtra("pace", 0.0)
+        calories = intent.getIntExtra("calories", 0)
+        run_id = intent.getStringExtra("run_id") ?: ""
+        startTime = intent.getLongExtra("start_time", 0L)
+        endTime = intent.getLongExtra("end_time", 0L)
+        run_type =intent.getStringExtra("RUN_MODE")?:""   
+      
         val pathJson = intent.getStringExtra("path_data")
-
+        
         val minutes = duration / 60
         val seconds = duration % 60
 
@@ -62,11 +75,38 @@ class SummaryActivity : AppCompatActivity() {
         }
 
         btnDone.setOnClickListener {
+
+            // goi ham save lich su
+            saveRun();
             val intent = Intent(this, HomeActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
             finish()
+
+
         }
+
+    }
+    fun saveRun()
+    {
+        val userid = AuthRepository().getCurrentUserId();
+        if(userid!=null)
+        {
+            Log.d(TAG,"lay thanh cong userid")
+            val runData = Run(run_id,userid,distance, duration,pace,calories,startTime,endTime,run_type)
+            RunsHistoryRepository.save(runData,){
+                    bool ->
+                if(bool)
+                {
+                    Log.d(TAG,"luu thanh cong lich su")
+                }
+                else{
+                    Log.e(TAG,"khong luu duoc lich su chay")
+                }
+            }
+        } else {
+          Log.e(TAG,"co loi khi lay userid khong luu duoc lich su run")
+        }  
     }
 
     private fun setupMap(points: List<GeoPoint>) {

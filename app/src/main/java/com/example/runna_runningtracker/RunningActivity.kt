@@ -20,6 +20,7 @@ import java.util.Locale
 import org.osmdroid.views.overlay.Marker
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.UUID
 
 class RunningActivity : AppCompatActivity() {
     private lateinit var userMarker: Marker
@@ -30,6 +31,7 @@ class RunningActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var polyline: Polyline
 
+    private var run_type : String ="";
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
 
@@ -41,12 +43,23 @@ class RunningActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
     private var totalDistance = 0f
-    private var lastLocation: Location? = null
 
+    private var startTime :Long =0L;
+    private var lastLocation: Location? = null
+    private var calories: Int =0;
+    private var run_id : String="";
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Configuration.getInstance().load(this, getSharedPreferences("osm", MODE_PRIVATE))
+        //set thoi gian cho start khi man hinh nay chay
+        startTime = System.currentTimeMillis();
+        //set id cho phien chay nay
+        run_id= UUID.randomUUID().toString();
+
+        //lay run type tu intent
+        run_type =intent.getStringExtra("RUN_MODE")?:""
+
 
         setContentView(R.layout.activity_running)
         tvDistanceMain = findViewById(R.id.tvDistanceMain)
@@ -91,28 +104,30 @@ class RunningActivity : AppCompatActivity() {
             running = false
             val distanceKm = totalDistance / 1000.0
 
-            val userWeight = UserPrefsManager.getUserWeightOrNull(this)
-            val finalCalories = if (userWeight != null && userWeight > 0) {
-                (1.036 * userWeight * distanceKm).toInt()
-            } else {
-                (distanceKm * 60).toInt()
-            }
-
-            val pathPoints = polyline.actualPoints
-            val pathJson = Gson().toJson(pathPoints)
-
-            val intent = Intent(this, SummaryActivity::class.java).apply {
-                putExtra("distance", distanceKm)
-                putExtra("duration", seconds)
-                putExtra("pace", if (distanceKm > 0) (seconds/60.0) / distanceKm else 0.0)
-                putExtra("calories",finalCalories)
-                putExtra("path_data", pathJson)
-            }
-            startActivity(intent)
-            finish()
+        val userWeight = UserPrefsManager.getUserWeightOrNull(this)
+        val finalCalories = if (userWeight != null && userWeight > 0) {
+            (1.036 * userWeight * distanceKm).toInt()
+        } else {
+            (distanceKm * 60).toInt()
         }
 
-        startLocationUpdates()
+        val pathPoints = polyline.actualPoints
+        val pathJson = Gson().toJson(pathPoints)
+
+        val intent = Intent(this, SummaryActivity::class.java).apply {
+            putExtra("distance", distanceKm)
+            putExtra("duration", seconds)
+            putExtra("pace", if (distanceKm > 0) (seconds / 60.0) / distanceKm else 0.0)
+            putExtra("calories", finalCalories)
+            putExtra("path_data", pathJson)
+            putExtra("run_id", run_id)
+            putExtra("start_time", startTime)
+            putExtra("end_time", System.currentTimeMillis())
+            putExtra("RUN_MODE", run_type)
+        }
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+        startActivity(intent)
+        finish()
     }
 
     private fun startLocationUpdates() {
