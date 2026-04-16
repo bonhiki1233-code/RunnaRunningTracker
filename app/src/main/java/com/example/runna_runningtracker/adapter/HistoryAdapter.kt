@@ -13,9 +13,8 @@ import java.util.Date
 import java.util.Locale
 
 class HistoryAdapter(private val runs: List<Run>) :
-
     RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
-    val TAG ="HistoryAdapter"
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.findViewById<TextView>(R.id.title)
         val runType = view.findViewById<TextView>(R.id.run_type)
