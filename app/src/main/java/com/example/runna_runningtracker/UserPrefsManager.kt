@@ -17,9 +17,6 @@ object UserPrefsManager {
     private const val KEY_GENDER = "gender"
     private const val KEY_HEIGHT = "height"
     private const val KEY_WEIGHT = "weight"
-    private const val KEY_LAST_DISTANCE ="last_distance"
-    private const val KEY_LAST_DURATION ="last_duration"
-    private const val KEY_LAST_CALORIES ="last_calories"
 
     fun saveUser(context: Context, user: User) {
         val ageToSave = calculateAgeFromBirthDate(user.birthDate).ifBlank { user.age }
@@ -63,20 +60,5 @@ object UserPrefsManager {
 
             age.coerceAtLeast(0).toString()
         }.getOrDefault("")
-    }
-
-    fun saveRunSession(context: Context, distance: Float, durationSeconds: Int, calories: Int) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putFloat(KEY_LAST_DISTANCE, distance)
-            .putInt(KEY_LAST_DURATION, durationSeconds)
-            .putInt(KEY_LAST_CALORIES, calories)
-            .apply()
-    }
-
-    fun getUserWeightOrNull(context: Context): Double? {
-        val prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val weightStr = prefs.getString("weight", "") ?: ""
-        return weightStr.toDoubleOrNull()
     }
 }

@@ -42,8 +42,6 @@ class RunningActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
     private var totalDistance = 0f
-
-    private var startTime :Long =0L;
     private var lastLocation: Location? = null
     private var calories: Int =0;
     private var runId : String="";

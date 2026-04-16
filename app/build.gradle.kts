@@ -58,7 +58,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    //thư viện chuyển danh sahcs tọa độ thành chuỗi JSON
-    implementation("com.google.code.gson:gson:2.10.1")
 }

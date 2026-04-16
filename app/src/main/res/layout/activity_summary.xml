@@ -166,14 +166,15 @@
                     <!-- Wave Graph Area -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="120dp"
                         android:layout_marginTop="20dp"
                         android:background="#F3F5F7"
-                        android:orientation="vertical">
-                        <org.osmdroid.views.MapView
-                            android:id="@+id/mapSummary"
+                        android:gravity="center">
+                        <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_runna_wave" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
