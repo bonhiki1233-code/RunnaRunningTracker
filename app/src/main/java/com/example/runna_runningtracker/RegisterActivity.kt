@@ -17,7 +17,7 @@ import com.example.runna_runningtracker.data.repository.AuthRepository
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var authRepository: AuthRepository
-    // Chỉ cho phép chữ + số, dài 7-10 ký tự, và bắt buộc có hoa/thường/số.
+    // Password phai du manh de tranh user tao mat khau qua de doan
     private val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{7,10}$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +33,7 @@ class RegisterActivity : AppCompatActivity() {
         val createBtn = findViewById<Button>(R.id.createAccountButton)
         val backBtn = findViewById<TextView>(R.id.backToLoginButton)
 
+        // Focus vao password thi hien huong dan cho user
         passwordInput.setOnFocusChangeListener { _, hasFocus ->
             passwordRequirements.visibility = if (hasFocus || passwordInput.text.isNotBlank()) {
                 View.VISIBLE
@@ -47,6 +48,7 @@ class RegisterActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
 
             override fun afterTextChanged(s: Editable?) {
+                // Doi mau helper de user biet password da hop le chua
                 val valid = isValidPassword(s?.toString().orEmpty())
                 passwordRequirements.setTextColor(
                     Color.parseColor(if (valid) "#2E7D32" else "#888888")
@@ -55,6 +57,7 @@ class RegisterActivity : AppCompatActivity() {
         })
 
         createBtn.setOnClickListener {
+            // Lay du lieu tu form va validate theo thu tu tu de den kho
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
             val confirm = confirmPasswordInput.text.toString().trim()
@@ -81,10 +84,12 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Chi khi qua het validate moi goi Firebase tao tai khoan
             authRepository.register(
                 email = email,
                 password = password,
                 onSuccess = { uid ->
+                    // Register xong thi quay ve Login de mo tiep complete info
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.putExtra("SHOW_PERSONAL_INFO", true)
                     intent.putExtra("USER_EMAIL", email)
@@ -105,6 +110,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun isValidPassword(password: String): Boolean {
+        // Regex giu toan bo rule password de de tai su dung
         return passwordRegex.matches(password)
     }
 }

@@ -5,7 +5,6 @@
     android:background="@color/runna_surface"
     android:orientation="vertical">
 
-    <!-- Header bar with back button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -26,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Create Challenge"
+            android:text="@string/create_challenge_title"
             android:textColor="@color/runna_text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -59,17 +58,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Challenge Name"
+                    android:text="@string/challenge_name_label"
                     android:textColor="#333333"
                     android:textSize="14sp" />
             </LinearLayout>
 
             <EditText
+                android:id="@+id/etChallengeTitle"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_button_outline"
-                android:hint="e.g., Summer Marathon Training"
+                android:hint="@string/challenge_name_hint"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="@color/runna_text_primary"
@@ -92,23 +92,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Description"
+                    android:text="@string/challenge_description_label"
                     android:textColor="#333333"
                     android:textSize="14sp" />
             </LinearLayout>
 
             <EditText
+                android:id="@+id/etChallengeDescription"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_button_outline"
                 android:gravity="top|start"
-                android:hint="Describe your challenge..."
+                android:hint="@string/challenge_description_hint"
                 android:padding="16dp"
                 android:textColor="@color/runna_text_primary"
                 android:textSize="16sp" />
 
-            <!-- Dates row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -138,17 +138,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="Start Date"
+                            android:text="@string/challenge_start_date"
                             android:textColor="#333333"
                             android:textSize="14sp" />
                     </LinearLayout>
 
                     <EditText
+                        android:id="@+id/etStartDate"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_button_outline"
-                        android:hint="mm/dd/yyyy"
+                        android:focusable="false"
+                        android:hint="@string/challenge_date_hint"
+                        android:inputType="none"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:textColor="@color/runna_text_primary"
@@ -178,17 +181,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="End Date"
+                            android:text="@string/challenge_end_date"
                             android:textColor="#333333"
                             android:textSize="14sp" />
                     </LinearLayout>
 
                     <EditText
+                        android:id="@+id/etEndDate"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_button_outline"
-                        android:hint="mm/dd/yyyy"
+                        android:focusable="false"
+                        android:hint="@string/challenge_date_hint"
+                        android:inputType="none"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:textColor="@color/runna_text_primary"
@@ -213,24 +219,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Distance Goal (km)"
+                    android:text="@string/challenge_goal_distance"
                     android:textColor="#333333"
                     android:textSize="14sp" />
             </LinearLayout>
 
             <EditText
+                android:id="@+id/etGoalDistance"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_button_outline"
-                android:hint="e.g., 100"
+                android:hint="@string/challenge_goal_hint"
                 android:inputType="numberDecimal"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="@color/runna_text_primary"
                 android:textSize="16sp" />
 
-            <!-- Tip box -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -242,7 +248,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tip:"
+                    android:text="@string/challenge_tip_title"
                     android:textColor="@color/runna_primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -252,15 +258,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:lineSpacingExtra="4dp"
-                    android:text="Create challenges that are achievable yet motivating. Consider your audience and set realistic goals to encourage participation."
+                    android:text="@string/challenge_tip_text"
                     android:textColor="#555555"
                     android:textSize="14sp" />
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/btnCreate"
@@ -269,7 +270,7 @@
                 android:layout_marginTop="32dp"
                 android:background="@drawable/bg_button_primary"
                 android:backgroundTint="@null"
-                android:text="Create Challenge"
+                android:text="@string/create_challenge_submit"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="17sp"

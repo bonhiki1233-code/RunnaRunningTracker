@@ -5,13 +5,13 @@ import com.google.firebase.auth.FirebaseAuth
 class AuthRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 ) {
-    // Tra ve uid hien tai de MainActivity biet user da login hay chua.
+    // Tra ve uid hien tai de app biet co session cu hay khong
     fun getCurrentUserId(): String? = auth.currentUser?.uid
 
-    // Dung khi muon check session cu luc app mo lai.
+    // Ham nay chi check login roi hay chua ma khong doc profile
     fun hasActiveSession(): Boolean = auth.currentUser != null
 
-    // Logout chi xoa session Auth, UI se duoc MainActivity reset sau.
+    // Logout o day chi xoa session Firebase Auth
     fun signOut() = auth.signOut()
 
     fun login(
@@ -20,7 +20,7 @@ class AuthRepository(
         onSuccess: (String?) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        // Repo hold pack Firebase, Activity chi xu ly UI va flow.
+        // Activity khong goi Firebase truc tiep ma di qua repo nay
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { result -> onSuccess(result.user?.uid) }
             .addOnFailureListener { error -> onFailure(error.message ?: "Unknown login error") }
@@ -32,7 +32,7 @@ class AuthRepository(
         onSuccess: (String?) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        // Register o day moi tao tk Auth, chua ghi vao profile Firestore.
+        // Register o day moi tao tai khoan Auth chua tao profile app
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { result -> onSuccess(result.user?.uid) }
             .addOnFailureListener { error -> onFailure(error.message ?: "Unknown register error") }
@@ -43,7 +43,7 @@ class AuthRepository(
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
-        // Gui email reset password toi dia chi user da nhap.
+        // Firebase se gui mail reset toi dia chi ma user nhap
         auth.sendPasswordResetEmail(email)
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { error -> onFailure(error.message ?: "Unknown reset error") }

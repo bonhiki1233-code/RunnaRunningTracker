@@ -23,10 +23,12 @@ import java.util.Locale
 
 class LoginActivity : AppCompatActivity() {
 
+    // 3 man nay nam chung trong 1 layout nen code se an hien theo flow
     private lateinit var loginScreen: View
     private lateinit var personalInfoScreen: View
     private lateinit var forgotPasswordOverlay: View
 
+    // Nhom input login va complete profile de doc du lieu tu form
     private lateinit var loginEmailInput: EditText
     private lateinit var loginPasswordInput: EditText
     private lateinit var registerEmailInput: EditText
@@ -44,7 +46,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var authRepository: AuthRepository
     private lateinit var userRepository: UserRepository
 
+    // uid nay duoc giu tam sau register de luu dung profile cho user moi
     private var pendingRegisterUid: String? = null
+    // currentUser la bo nho tam giua login complete info va luu profile
     private var currentUser = User(
         name = "",
         email = "",
@@ -68,6 +72,7 @@ class LoginActivity : AppCompatActivity() {
         styleInlineRegisterText()
         bindActions()
 
+        // Neu vua register xong thi mo thang form complete info
         if (intent.getBooleanExtra("SHOW_PERSONAL_INFO", false)) {
             val email = intent.getStringExtra("USER_EMAIL") ?: ""
             val uid = intent.getStringExtra("USER_UID")
@@ -75,11 +80,13 @@ class LoginActivity : AppCompatActivity() {
             pendingRegisterUid = uid
             showPersonalInfoScreen()
         } else {
+            // Neu da co session cu thi bo qua man login
             checkExistingSession()
         }
     }
 
     private fun bindViews() {
+        // Gan bien Kotlin voi view trong XML de dung lai cho ca flow
         loginScreen = findViewById(R.id.loginScreen)
         personalInfoScreen = findViewById(R.id.personalInfoScreen)
         forgotPasswordOverlay = findViewById(R.id.forgotPasswordOverlay)
@@ -97,6 +104,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun hideLegacyViews() {
+        // Layout nay tung gom nhieu man cu nen can an bot de tranh chong len nhau
         val legacyIds = listOf(
             R.id.appScreen,
             R.id.trackingScreen,
@@ -111,10 +119,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun bindActions() {
+        // Click Register thi sang man tao tai khoan rieng
         showRegisterText.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
+        // Quen mat khau se doi tu login sang overlay reset
         findViewById<TextView>(R.id.forgotPasswordText).setOnClickListener {
             loginScreen.visibility = View.GONE
             forgotPasswordOverlay.visibility = View.VISIBLE
@@ -126,6 +136,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun styleInlineRegisterText() {
+        // To mau rieng chu Register de user nhin de bam de hon
         val fullText = getString(R.string.register_prompt)
         val registerWord = getString(R.string.register_word)
         val startIndex = fullText.indexOf(registerWord)
@@ -142,11 +153,13 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun checkExistingSession() {
+        // Firebase con nho uid thi load profile roi vao home luon
         val currentUserId = authRepository.getCurrentUserId() ?: return
         loadProfileAndGoHome(currentUserId)
     }
 
     private fun handleLogin() {
+        // Login chi cho di tiep khi email va password da du
         val email = loginEmailInput.text.toString().trim()
         val password = loginPasswordInput.text.toString().trim()
 
@@ -155,6 +168,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
+        // Dang nhap Auth truoc roi moi dong bo profile Firestore
         authRepository.login(
             email = email,
             password = password,
@@ -169,6 +183,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun handleForgotPassword() {
+        // Reset password can email de Firebase gui mail
         val resetEmail = forgotPasswordEmailInput.text.toString().trim()
         if (resetEmail.isBlank()) {
             Toast.makeText(this, getString(R.string.please_enter_email), Toast.LENGTH_SHORT).show()
@@ -189,6 +204,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showPersonalInfoScreen() {
+        // Form nay giu email vua register nhung de trong cac field con lai
         loginScreen.visibility = View.GONE
         personalInfoScreen.visibility = View.VISIBLE
         personalNameInput.setText("")
@@ -200,12 +216,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun completePersonalInfo() {
+        // Uu tien uid vua register xong neu dang o flow tao tai khoan moi
         val finalUid = pendingRegisterUid ?: authRepository.getCurrentUserId()
         if (finalUid == null) {
             Toast.makeText(this, getString(R.string.please_register_first), Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Gom du lieu form thanh 1 object user de luu Firestore va local
         currentUser = currentUser.copy(
             uid = finalUid,
             name = personalNameInput.text.toString().trim().ifBlank { currentUser.name },
@@ -217,6 +235,7 @@ class LoginActivity : AppCompatActivity() {
             weight = personalWeightInput.text.toString().trim().ifBlank { currentUser.weight }
         )
 
+        // Profile duoc tao trong Firestore sau buoc register Auth
         userRepository.createUserProfile(
             user = currentUser,
             onSuccess = {
@@ -231,6 +250,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToHome(uid: String?) {
+        // Qua home xong thi dong man login de back khong quay lai day
         val intent = Intent(this, HomeActivity::class.java)
         intent.putExtra(HomeActivity.EXTRA_USER_ID, uid)
         startActivity(intent)
@@ -238,11 +258,13 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loadProfileAndGoHome(uid: String?) {
+        // uid null thi van vao home an toan de tranh crash flow
         if (uid.isNullOrBlank()) {
             goToHome(null)
             return
         }
 
+        // Login xong phai load profile Firestore de Home va Profile co du data
         userRepository.loadUserProfile(
             uid = uid,
             onSuccess = { user ->
@@ -251,7 +273,7 @@ class LoginActivity : AppCompatActivity() {
                 goToHome(uid)
             },
             onFailure = {
-                // Nếu Firestore chưa có profile thì vẫn cho vào app bằng dữ liệu tối thiểu.
+                // Neu Firestore chua co profile thi van vao app bang data toi thieu
                 UserPrefsManager.saveUser(this, currentUser.copy(uid = uid))
                 goToHome(uid)
             }
@@ -259,11 +281,13 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupProfilePickers() {
+        // Gender va birthday duoc chon bang picker de nhap cho on dinh hon
         personalGenderInput.setOnClickListener { showGenderPicker(personalGenderInput) }
         personalAgeInput.setOnClickListener { showBirthDatePicker(personalAgeInput) }
     }
 
     private fun showGenderPicker(target: EditText) {
+        // Picker nay tra ve 1 gia tri trong danh sach gioi tinh
         val genderOptions = resources.getStringArray(R.array.gender_options)
         AlertDialog.Builder(this)
             .setItems(genderOptions) { _, which -> target.setText(genderOptions[which]) }
@@ -271,6 +295,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showBirthDatePicker(target: EditText) {
+        // Neu da co ngay sinh thi mo lai ngay cu de user sua nhanh hon
         val calendar = parseBirthDate(target.text.toString()) ?: Calendar.getInstance().apply { add(Calendar.YEAR, -18) }
         DatePickerDialog(
             this,
@@ -285,10 +310,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun formatBirthDate(calendar: Calendar): String {
+        // App dang thong nhat ngay sinh theo dang dd MM yyyy
         return SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.time)
     }
 
     private fun parseBirthDate(value: String): Calendar? {
+        // Doi text ngay sinh thanh Calendar de tinh tuoi va mo lai picker
         if (value.isBlank()) return null
         return runCatching {
             val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(value) ?: return null
@@ -297,6 +324,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun calculateAgeFromBirthDate(birthDate: String): String {
+        // Age la du lieu suy ra tu birthday nen app tinh lai moi lan can
         val birthCalendar = parseBirthDate(birthDate) ?: return ""
         val today = Calendar.getInstance()
         var age = today.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR)
