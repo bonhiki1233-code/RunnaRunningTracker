@@ -23,7 +23,7 @@ class HistoryAdapter(private val runs: List<Run>) :
 
         val distance = view.findViewById<TextView>(R.id.distance)
         val duration = view.findViewById<TextView>(R.id.duration)
-        val pace = view.findViewById<TextView>(R.id.pace)
+        val pace = view.findViewById<TextView>(R.id.pace);
     }
 
     override fun onCreateViewHolder(
