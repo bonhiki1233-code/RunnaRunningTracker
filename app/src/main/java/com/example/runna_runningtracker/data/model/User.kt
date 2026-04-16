@@ -14,7 +14,7 @@ data class User(
     val height: String = "",
     val weight: String = ""
 ) {
-    // Chuyen model thanh map de ghi len Firestore
+    // Chuyen object user thanh map de ghi len Firestore
     fun toMap(): Map<String, String> {
         return mapOf(
             KEY_NAME to name,
@@ -27,7 +27,7 @@ data class User(
     }
 
     companion object {
-        // Constant dung chung de tranh viet tay ten collection/field o nhieu noi.
+        // Gom ten collection va field chung de tranh go sai nhieu noi
         const val COLLECTION_USERS = "users"
         const val KEY_NAME = "name"
         const val KEY_EMAIL = "email"
@@ -38,7 +38,7 @@ data class User(
         const val KEY_WEIGHT = "weight"
 
         fun fromMap(uid: String, data: Map<String, Any>?): User {
-            // Doc tu Firestore: neu field nao thieu thi cho ve chuoi rong.
+            // Doc user tu Firestore roi tinh age lai tu birthday neu co
             val birthDate = data?.get(KEY_BIRTH_DATE) as? String ?: ""
             return User(
                 uid = uid,
@@ -53,6 +53,7 @@ data class User(
         }
 
         private fun calculateAgeFromBirthDate(birthDate: String): String {
+            // Age la data suy ra nen luon uu tien tinh tu birthday
             if (birthDate.isBlank()) return ""
 
             return runCatching {
