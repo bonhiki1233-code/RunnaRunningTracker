@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import com.google.gson.Gson
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -97,21 +98,40 @@ class RunningActivity : AppCompatActivity() {
         }
 
         btnOverlayFinish.setOnClickListener {
-
+            running = false
             val distanceKm = totalDistance / 1000.0
+            tvDistanceMain.text = String.format("%.2f", distanceKm)
+
+            val userWeight = UserPrefsManager.getUserWeightOrNull(this)
+
+            if (userWeight != null && userWeight > 0) {
+                (1.036 * userWeight * distanceKm).toInt()
+            } else {
+                (distanceKm * 60).toInt()
+            }
+
+            tvCaloriesMain.text = calories.toString()
+
+
+            val pathPoints = polyline.actualPoints
+            val pathJson = Gson().toJson(pathPoints)
+
             val pace = if (distanceKm > 0)
                 (seconds / 60.0) / distanceKm
             else 0.0
 
-            val intent = Intent(this, SummaryActivity::class.java)
-            intent.putExtra("distance", distanceKm)
-            intent.putExtra("duration", seconds)
-            intent.putExtra("pace", pace)
-            intent.putExtra("run_id",run_id)
-            intent.putExtra("end_time", System.currentTimeMillis())
-            intent.putExtra("start_time",startTime)
-            intent.putExtra("calories",calories)
-            intent.putExtra("RUN_MODE",run_type);
+            val intent = Intent(this, SummaryActivity::class.java).apply {
+                putExtra("distance", distanceKm)
+                putExtra("duration", seconds)
+                putExtra("pace", if (distanceKm > 0) (seconds / 60.0) / distanceKm else 0.0)
+                putExtra("run_id", run_id)
+                putExtra("end_time", System.currentTimeMillis())
+                putExtra("start_time", startTime)
+                putExtra("calories", calories)
+                putExtra("path_data", pathJson)
+                putExtra("RUN_MODE", run_type)
+            }
+
 //            data class Run(
 //                val run_id: String = "",
 //                val user_id: String = "",
@@ -123,7 +143,7 @@ class RunningActivity : AppCompatActivity() {
 //                val end_time : Long =0L,
 
 //            )
-
+            fusedLocationClient.removeLocationUpdates(locationCallback)
             startActivity(intent)
             finish()
         }
