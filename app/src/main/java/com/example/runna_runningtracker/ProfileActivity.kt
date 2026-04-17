@@ -3,6 +3,7 @@ package com.example.runna_runningtracker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
@@ -11,13 +12,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.runna_runningtracker.data.repository.AuthRepository
+import com.example.runna_runningtracker.data.repository.RunsHistoryRepository
 import com.example.runna_runningtracker.data.repository.UserRepository
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 class ProfileActivity : AppCompatActivity() {
-
+    private val TAG ="ProfileActivity"
     private lateinit var authRepository: AuthRepository
     private lateinit var userRepository: UserRepository
     private val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{7,10}$")
@@ -66,6 +68,7 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        displayOverallstats()
     }
 
     private fun showAppSettingsMenu(emailView: TextView) {
@@ -224,5 +227,55 @@ class ProfileActivity : AppCompatActivity() {
 
             age.coerceAtLeast(0).toString()
         }.getOrDefault("")
+    }
+// hien thi overallStats
+    fun displayOverallstats()
+    {
+        val TvtotalRun =findViewById<TextView>(R.id.tvTotalRuns);
+        val TvtotalDistance =findViewById<TextView>(R.id.tvTotalDistance)
+        val TvtotalTime =findViewById<TextView>(R.id.tvTotalDurationRun);
+        val tvTotalAvgPace =findViewById<TextView>(R.id.tvAvgPace);
+
+        val userid = AuthRepository().getCurrentUserId();
+        if(userid!=null)
+        {
+            Log.d(TAG,"userid khong null bat dau lay thong tin cho overallStas")
+            RunsHistoryRepository.getHistory(userid){
+                runs->
+                val totalruns =runs.size;
+                val totalKm =runs.sumOf { it.distance }
+                val totalSeconds = runs.sumOf { it.duration.toLong() } // Giả sử duration là giây
+
+                val minutes = totalSeconds / 60
+                val seconds = totalSeconds % 60
+
+                val formattedTime = "${minutes} phút ${seconds} giây"
+                Log.d(TAG,"tong cuoc chay la ${totalruns}")
+                Log.d(TAG,"tong km la ${totalKm}")
+                Log.d(TAG,"tong thoi gian la ${formattedTime}")
+
+            val totalAvgPace =calculateAvgPace(totalSeconds, totalKm )
+
+
+                TvtotalRun.setText(totalruns.toString())
+                TvtotalDistance.setText(totalKm.toString()+" km")
+                TvtotalTime.setText(formattedTime)
+                tvTotalAvgPace.setText(totalAvgPace+" min/km")
+            }
+        }
+
+    }
+    fun calculateAvgPace(totalTimeSeconds: Long, totalDistanceKm: Double): String {
+        if (totalDistanceKm <= 0) return "0:00"
+
+        // 1. Tính tổng số giây cho mỗi km
+        val paceInSeconds = (totalTimeSeconds / totalDistanceKm).toLong()
+
+        // 2. Chuyển đổi số giây đó thành phút và giây
+        val minutes = paceInSeconds / 60
+        val seconds = paceInSeconds % 60
+
+        // 3. Trả về định dạng mm:ss (ví dụ: 05:30)
+        return String.format("%d:%02d", minutes, seconds)
     }
 }
