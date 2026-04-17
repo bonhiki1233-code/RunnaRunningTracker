@@ -122,25 +122,33 @@
 
                 <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="12dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Runs" android:textColor="#666666"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="127" android:layout_alignParentEnd="true" android:textStyle="bold" android:textColor="#333333"/>
+                    <TextView
+                        android:id="@+id/tvTotalRuns"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="127" android:layout_alignParentEnd="true" android:textStyle="bold" android:textColor="#333333"/>
                 </RelativeLayout>
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F0F0"/>
 
                 <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="12dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Distance" android:textColor="#666666"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="523.4 km" android:layout_alignParentEnd="true" android:textStyle="bold" android:textColor="#333333"/>
+                    <TextView
+                        android:id="@+id/tvTotalDistance"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="523.4 km" android:layout_alignParentEnd="true" android:textStyle="bold" android:textColor="#333333"/>
                 </RelativeLayout>
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F0F0"/>
 
                 <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="12dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Time" android:textColor="#666666"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="48h 32m" android:layout_alignParentEnd="true" android:textStyle="bold" android:textColor="#333333"/>
+                    <TextView
+                        android:id="@+id/tvTotalDurationRun"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="48h 32m" android:layout_alignParentEnd="true" android:textStyle="bold" android:textColor="#333333"/>
                 </RelativeLayout>
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F0F0"/>
 
                 <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="12dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Avg Pace" android:textColor="#666666"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5:34 min/km" android:layout_alignParentEnd="true" android:textStyle="bold" android:textColor="#333333"/>
+                    <TextView
+                        android:id="@+id/tvAvgPace"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5:34 min/km" android:layout_alignParentEnd="true" android:textStyle="bold" android:textColor="#333333"/>
                 </RelativeLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
