@@ -98,7 +98,7 @@ class HomeActivity : AppCompatActivity() {
                     val total_km =runs.sumOf { it.distance }
 
                     val total =runs.size;
-                    total_disntance.setText("${String.format("%.2f km", total_km)} km")
+                    total_disntance.setText(String.format("%.2f km", total_km))
                     total_run.setText(total.toString())
                 }
             }

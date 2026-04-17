@@ -1,5 +1,6 @@
 package com.example.runna_runningtracker.data.repository
 
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 
 class AuthRepository(
@@ -13,6 +14,51 @@ class AuthRepository(
 
     // Logout o day chi xoa session Firebase Auth
     fun signOut() = auth.signOut()
+
+    fun updatePassword(
+        currentPassword: String,
+        newPassword: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val user = auth.currentUser
+        val email = user?.email
+        if (user == null || email.isNullOrBlank()) {
+            onFailure("User session not found")
+            return
+        }
+
+        val credential = EmailAuthProvider.getCredential(email, currentPassword)
+        user.reauthenticate(credential)
+            .addOnSuccessListener {
+                user.updatePassword(newPassword)
+                    .addOnSuccessListener { onSuccess() }
+                    .addOnFailureListener { error ->
+                        onFailure(error.message ?: "Unknown update password error")
+                    }
+            }
+            .addOnFailureListener { error ->
+                onFailure(error.message ?: "Current password is incorrect")
+            }
+    }
+
+    fun updateEmail(
+        newEmail: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val user = auth.currentUser
+        if (user == null) {
+            onFailure("User session not found")
+            return
+        }
+
+        user.verifyBeforeUpdateEmail(newEmail)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { error ->
+                onFailure(error.message ?: "Unknown update email error")
+            }
+    }
 
     fun login(
         email: String,

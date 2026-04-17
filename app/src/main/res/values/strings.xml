@@ -47,7 +47,16 @@
     <string name="profile_info_format">Name: %1$s\nEmail: %2$s\nAge: %3$s\nGender: %4$s\nHeight: %5$s cm\nWeight: %6$s kg</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="app_information">App Information</string>
+    <string name="app_information_settings">App Settings</string>
     <string name="logout">Logout</string>
+    <string name="update_email">Update Email</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+    <string name="new_email">New email</string>
+    <string name="current_email_format">Current email: %1$s</string>
+    <string name="password_updated_success">Password updated successfully</string>
+    <string name="email_update_verification_sent">Verification email sent to your new address</string>
 
     <string name="choose_workout_type">Choose your workout type</string>
     <string name="run_type_easy">Easy Run</string>

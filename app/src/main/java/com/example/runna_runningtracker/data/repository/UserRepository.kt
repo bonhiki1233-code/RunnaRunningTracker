@@ -73,4 +73,18 @@ class UserRepository(
                 callback(null)
             }
     }
+
+    fun updateUserEmail(
+        uid: String,
+        email: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        firestore.collection(User.COLLECTION_USERS).document(uid)
+            .set(mapOf(User.KEY_EMAIL to email), SetOptions.merge())
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { error ->
+                onFailure(error.message ?: "Unknown update email error")
+            }
+    }
 }
