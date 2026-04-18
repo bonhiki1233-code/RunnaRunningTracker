@@ -17,7 +17,6 @@ Runna là ứng dụng theo dõi sức khoẻ trên nền tảng Android, đư�
 <p align="center">
   <img src="screenshots/home.png" width="18%" title="Home">
   <img src="screenshots/start-run.png" width="18%" title="Start Run">
-  <img src="screenshots/running.png" width="18%" title="Đang theo dõi chạy">
   <img src="screenshots/history.png" width="18%" title="History">
   <img src="screenshots/challenges.png" width="18%" title="Challenges">
 </p>
