@@ -1,282 +1,43 @@
-# Runna - Running Tracker App
+# Runna
 
-`Runna` la app Android theo doi chay bo, duoc xay dung bang `Kotlin` trong `Android Studio`, su dung `Firebase` de quan ly tai khoan va du lieu nguoi dung.
+Runna là ứng dụng theo dõi sức khoẻ trên nền tảng Android, được thiết kế chuyên biệt cho việc quản lý các hoạt động chạy bộ, ghi nhận chi tiết các buổi tập và hỗ trợ theo dõi tiến độ luyện tập mỗi ngày. Ứng dụng mang đến một giao diện trực quan giúp người dùng dễ dàng theo dõi quãng đường, thời gian, tốc độ (pace), lượng calo tiêu thụ, xem lại lịch sử các buổi chạy và tham gia các thử thách chạy bộ một cách dễ dàng, tất cả được tích hợp trong một ứng dụng duy nhất.
 
-Project hien tai dang o giai doan:
-- da co bo UI prototype chinh
-- da co `Auth + Profile` that voi Firebase
-- chua hoan thanh phan `Run Session`, `GPS Tracking`, `Map`, `History`, `Statistics`
+## Tính năng nổi bật
 
----
+1. **Định vị & Theo dõi GPS trực tiếp**: Ghi nhận và hiển thị chính xác lộ trình của người chạy theo thời gian thực trên bản đồ tương tác thông qua hệ thống OpenStreetMap.
+2. **Đa dạng chế độ tập luyện**: Hỗ trợ nhiều mục tiêu khác nhau như Chạy nhẹ nhàng (Easy Run), Chạy đường dài (Long Run), Chạy biến tốc (Interval), và Đi bộ (Walking).
+3. **Tính toán thống kê chi tiết**: Ứng dụng tự động đo lường các chỉ số quan trọng gồm có quãng đường, thời gian chạy, pace trung bình và lượng calo đốt cháy. Hiển thị thông số tổng kết (Summary) đầy đủ sau mỗi lần chạy.
+4. **Đồng bộ dữ liệu đám mây an toàn**: Mọi thông tin người dùng, lịch sử cá nhân đến dữ liệu các thử thách đều được tự động lưu trữ và đồng bộ hóa đám mây với Firebase Firestore.
+5. **Lịch sử hoạt động**: Tính năng lưu trữ tự động toàn bộ lịch sử các bài tập đã hoàn thành, cho phép xem thống kê tổng quan trực tiếp trên màn hình Profile.
+6. **Hệ thống thử thách (Challenges)**: Khám phá các thử thách chạy bộ công cộng, hoặc tiến hành tạo thử thách mới, tham gia thử thách nhanh chóng. App sẽ cập nhật tiến độ tự động ngay khi quá trình chạy kết thúc.
+7. **Tài khoản cá nhân**: Hỗ trợ đăng ký và đăng nhập bảo mật qua Email/Mật khẩu. Dễ dàng đổi mật khẩu và quản lý hồ sơ người dùng tiện lợi.
 
-## 1. Cach doc va su dung project
+## Công nghệ phát triển (Build With)
 
-### Thu muc va file quan trong
+*   **[Kotlin](https://kotlinlang.org/)**: Ngôn ngữ lập trình chính được tối ưu hóa cho hệ điều hành Android.
+*   **Android XML & UI**: Xây dựng layout với XML bám sát và chuẩn xác theo bản thiết kế giao diện cao cấp trên Figma.
+*   **[OpenStreetMap (OSMDroid)](https://github.com/osmdroid/osmdroid)**: Thư viện nguồn mở thay thế tuyệt vời cho Google Maps, cung cấp khả năng hiển thị bản đồ mượt mà và vẽ cung đường người dùng chạy.
+*   **[Figma](https://www.figma.com/)**: Đóng vai trò là công cụ sáng tạo UI/UX và thiết kế trải nghiệm người dùng hoàn chỉnh.
+*   **[Firebase Authentication](https://firebase.google.com/docs/auth)**: Tích hợp hệ thống phân quyền và xác thực người dùng.
+*   **[Cloud Firestore](https://firebase.google.com/docs/firestore)**: Đóng vai trò làm sơ sở dữ liệu trực tuyến, giúp truy xuất nhanh hồ sơ luyện tập và tiến trình tham gia các challenge của user.
 
-#### UI + flow chinh
-- [MainActivity.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/MainActivity.kt)
-- [activity_main.xml](D:/RunnaRunningTracker/app/src/main/res/layout/activity_main.xml)
-- [strings.xml](D:/RunnaRunningTracker/app/src/main/res/values/strings.xml)
+## Các màn hình chính
 
-#### Model va repository
-- [User.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/data/model/User.kt)
-- [AuthRepository.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/data/repository/AuthRepository.kt)
-- [UserRepository.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/data/repository/UserRepository.kt)
+*   Đăng nhập (Login) / Đăng ký (Register) / Hoàn tất hồ sơ (Complete Profile)
+*   Trang chủ (Home)
+*   Bắt đầu chạy (Start Running) / Theo dõi buổi chạy (Running Session) / Tổng kết buổi chạy (Summary)
+*   Lịch sử theo dõi (Running History)
+*   Thử thách (Challenges) / Chi tiết thử thách (Challenge Details) / Tạo thử thách mới (Create Challenge)
+*   Cài đặt người dùng (Profile Settings)
 
-#### Tai lieu handoff rieng cho Member 1
-- [MEMBER1_HANDOFF.md](D:/RunnaRunningTracker/MEMBER1_HANDOFF.md)
+## Hướng dẫn chạy dự án
 
-### Thu tu nen doc project
-
-Neu la nguoi moi vao project, nen doc theo thu tu nay:
-
-1. [README.md](D:/RunnaRunningTracker/README.md)
-2. [MEMBER1_HANDOFF.md](D:/RunnaRunningTracker/MEMBER1_HANDOFF.md)
-3. [MainActivity.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/MainActivity.kt)
-4. [activity_main.xml](D:/RunnaRunningTracker/app/src/main/res/layout/activity_main.xml)
-5. [User.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/data/model/User.kt)
-6. [AuthRepository.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/data/repository/AuthRepository.kt)
-7. [UserRepository.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/data/repository/UserRepository.kt)
-
-### Cach chay project
-
-1. Mo project bang Android Studio
-2. Cho Gradle sync xong
-3. Dam bao da co file `google-services.json` trong:
-   - `app/google-services.json`
-4. Trong Firebase Console, can da bat:
-   - `Authentication > Email/Password`
-   - `Cloud Firestore`
-5. Chay app bang emulator hoac thiet bi that
-
-### Luu y layout
-- Theo yeu cau hien tai, file layout chinh dang duoc giu theo huong `LinearLayout + ScrollView`
-- Khong nen tu y doi sang `ConstraintLayout`, `FrameLayout`, `RelativeLayout` neu chua thong nhat
+1.  Mở dự án này bằng **Android Studio**.
+2.  Sau khi clone code về, bảo đảm bạn đã tải xuống và lấy tệp `app/google-services.json` đặt vào bên trong thư mục `app` để kết nối vào Firebase.
+3.  Vào console dự án Firebase và kích hoạt tính năng **Firebase Authentication** cùng dự án cơ sở dữ liệu **Cloud Firestore**.
+4.  Chạm vào biểu tượng *Sync Project with Gradle Files* và đợi hệ thống tải toàn bộ các thư viện (dependencies) cần thiết.
+5.  Thực hiện lệnh Build và chạy ứng dụng trực tiếp trên thiết bị giả lập (Android Emulator) hoặc thiết bị thật.
 
 ---
 
-## 2. Project hien tai da di toi dau
-
-Project da co:
-- bo giao dien chinh cua app
-- man `Login`
-- man `Register`
-- man `Personal Information`
-- man `Home`
-- man `Start Running`
-- man `History` prototype
-- man `Profile`
-- man `Tracking` prototype
-- man `Run Summary` prototype
-- popup `Forgot Password`
-- popup `Edit Profile`
-- popup `App Information`
-
-Project da ket noi Firebase cho:
-- `Login`
-- `Register`
-- `Forgot Password`
-- `Logout`
-- tao profile nguoi dung tren Firestore
-- load profile tu Firestore
-- update profile len Firestore
-
-Project hien chua co:
-- `RunSession` model that
-- GPS tracking that
-- Google Map that
-- distance calculation that
-- run history that
-- statistics that
-- tach man hinh thanh `Fragment` rieng
-
-Noi ngan gon:
-- UI da co nen
-- Auth + Profile da chay that
-- Tracking/Map/History/Statistics van con la prototype
-
----
-
-## 3. Cong viec da hoan thanh cua Member 1
-
-Member 1 phu trach: `Auth + Profile`
-
-### Da hoan thanh
-- ket noi Firebase vao project Android
-- bat `Firebase Authentication`
-- bat `Cloud Firestore`
-- hoan thanh `Register` bang Firebase Auth
-- hoan thanh `Login` bang Firebase Auth
-- hoan thanh `Forgot Password`
-- hoan thanh `Logout`
-- tao man `Personal Information` sau khi register
-- tao luong:
-  - `register -> personal information -> save firestore -> vao app`
-- load profile tu Firestore sau khi login
-- update profile len Firestore khi edit
-- tao `User model`
-- tach logic auth ra `AuthRepository`
-- tach logic profile ra `UserRepository`
-- giam bot firebase logic trong `MainActivity`
-- dua nhieu text hardcode sang `strings.xml`
-- them comment/ghi chu de nguoi khac de doc code
-- giu file layout chinh theo huong `LinearLayout + ScrollView`
-
-### Ket qua hien tai cua Member 1
-- phan `Auth + Profile` da xong o muc de team co the tiep tuc lam tiep
-- phan viec con lai cua Member 1 chu yeu la chinh UI dep hon neu can
-
----
-
-## 4. Cong viec can lam cua Member 2
-
-Member 2 phu trach: `User Data + UI (Front-end)`
-
-### Muc tieu
-- hoan thien giao dien cho dong bo, dep va de dung hon
-- bind du lieu user len cac man hien co
-
-### Cong viec can lam
-- chinh lai giao dien `Home` theo dung style Figma
-- chinh lai giao dien `Start Running`
-- chinh lai giao dien `History`
-- chinh lai giao dien `Profile`
-- chinh spacing, text size, card, button cho dong bo
-- bind thong tin user that len:
-  - `Home`
-  - `Profile`
-  - `Edit Profile`
-- ra soat tat ca text / margin / mau sac cho thong nhat
-- tiep tuc them note trong XML neu can
-
-### Luu y
-- khong nen sua schema Firestore cua `users` neu chua thong nhat
-- nen tai su dung `User model` da co
-- nen giu style theo `Runna`: clean, minimal, cam la mau nhan
-
----
-
-## 5. Cong viec can lam cua Member 3
-
-Member 3 phu trach: `Run Session + Timer`
-
-### Muc tieu
-- bien phan tracking hien tai tu demo thanh logic that
-
-### Cong viec can lam
-- tao `RunSession` model
-- tao state cho buoi chay:
-  - `idle`
-  - `running`
-  - `paused`
-  - `finished`
-- xu ly:
-  - `Start`
-  - `Pause`
-  - `Resume`
-  - `Finish`
-- tach logic timer hien tai thanh module rieng
-- dam bao timer tinh dung khi pause/resume
-- luu run type dang chon vao session
-
-### Luu y
-- khong nen sua flow `Auth/Profile`
-- co the dung man tracking hien tai lam UI nen, nhung logic nen tach khoi `MainActivity`
-
----
-
-## 6. Cong viec can lam cua Member 4
-
-Member 4 phu trach: `GPS + Map Tracking`
-
-### Muc tieu
-- them tracking vi tri that theo thoi gian thuc
-- hien thi duong chay that tren map
-
-### Can dung cong nghe nao
-
-Khong dung `Firebase` de lay GPS.
-
-GPS tracking trong Android nen dung:
-- `FusedLocationProviderClient` cua Google Play Services de lay vi tri
-- `Google Maps SDK for Android` de hien thi ban do
-
-Noi ngan gon:
-- `Firebase` dung de luu du lieu
-- `Google Location + Google Maps` dung de lay va hien thi GPS
-
-### Cong viec can lam
-- them permission location:
-  - `ACCESS_FINE_LOCATION`
-  - `ACCESS_COARSE_LOCATION`
-- neu can tracking background, xem them:
-  - `ACCESS_BACKGROUND_LOCATION`
-- tao module lay vi tri hien tai
-- cap nhat location theo chu ky
-- tich hop Google Maps
-- ve `polyline` duong chay
-- tinh quang duong tu danh sach diem GPS
-- tra du lieu route ve cho Member 3 / Member 5 dung tiep
-
-### Luu y ky thuat
-- nen dung `FusedLocationProviderClient`, khong dung Firebase cho GPS
-- nen tao model `RoutePoint(lat, lng, timestamp)`
-- nen loc bot diem nhay sai de tranh cong sai km
-
----
-
-## 7. Firestore structure hien tai
-
-### Collection: `users`
-Document:
-- `users/{uid}`
-
-Fields hien dang dung:
-- `name`
-- `email`
-- `age`
-- `gender`
-- `height`
-- `weight`
-
-### Collection chua lam
-Du kien sau nay se can:
-- `runs`
-
-Member 3, 4, 5 can thong nhat schema nay truoc khi code sau.
-
----
-
-## 8. Tinh trang tong ket ngan
-
-### Da xong
-- UI nen cua app
-- Auth Firebase
-- User profile Firestore
-- Handoff co ban cho team
-
-### Dang o muc prototype
-- Tracking screen
-- History
-- Summary
-
-### Chua lam
-- GPS
-- Google Map
-- Run Session that
-- History that
-- Statistics that
-
----
-
-## 9. Ghi chu cho team
-
-- Neu sua code phan Auth/Profile, doc ky:
-  - [MainActivity.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/MainActivity.kt)
-  - [AuthRepository.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/data/repository/AuthRepository.kt)
-  - [UserRepository.kt](D:/RunnaRunningTracker/app/src/main/java/com/example/runna_runningtracker/data/repository/UserRepository.kt)
-- Neu sua giao dien, doc ky:
-  - [activity_main.xml](D:/RunnaRunningTracker/app/src/main/res/layout/activity_main.xml)
-  - [strings.xml](D:/RunnaRunningTracker/app/src/main/res/values/strings.xml)
-- Khong nen doi lung tung naming va schema neu chua thong nhat ca nhom
-
+> **Ghi chú:** Dự án **Runna** chú trọng vào việc đem đến trải nghiệm ứng dụng chạy bộ thật mượt mà nhưng đầy đủ các chức năng thiết yếu. Ứng dụng đặc biệt sử dụng bản đồ mã nguồn mở OpenStreetMap cho quá trình định vị thay cho thẻ truyền thống. Về mảng thiết kế frontend, tất cả layout đều được implement chỉn chu theo nguyên tắc "Pixel Perfect" nhằm bám sát với thiết kế (UI) trên Figma.
