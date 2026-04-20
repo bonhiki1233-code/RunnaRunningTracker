@@ -104,7 +104,7 @@ class RunningActivity : AppCompatActivity() {
 
             val userWeight = UserPrefsManager.getUserWeightOrNull(this)
 
-            if (userWeight != null && userWeight > 0) {
+            calories = if (userWeight != null && userWeight > 0) {
                 (1.036 * userWeight * distanceKm).toInt()
             } else {
                 (distanceKm * 60).toInt()
@@ -190,6 +190,8 @@ class RunningActivity : AppCompatActivity() {
                     val distance = it.distanceTo(location)
                     if (distance in 2f..30f) {
                         totalDistance += distance
+                        polyline.addPoint(geoPoint)
+                        mapView.invalidate()
                     }
                 }
 
@@ -202,8 +204,8 @@ class RunningActivity : AppCompatActivity() {
 
                 lastLocation = location
 
-                polyline.addPoint(geoPoint)
-                mapView.invalidate()
+//                polyline.addPoint(geoPoint)
+//                mapView.invalidate()
 
                 val distanceKm = totalDistance / 1000.0
                 tvDistanceMain.text = String.format("%.2f", distanceKm)
